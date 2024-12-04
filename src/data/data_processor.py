@@ -31,16 +31,16 @@ class DataProcessor:
             np.ndarray: 前処理済みの画像データ
         """
         # 画像の読み込み
-        image = image.open(image_path)
+        img_data = Image.open(image_path)
         
         # RGBに変換(グレースケールやRGBA画像に対応するため)
-        image = image.convert('RGB')
+        img_data = img_data.convert('RGB')
         
         # リサイズ
-        image = image.resize(self.image_size)
+        img_data = img_data.resize(self.image_size)
         
         # numpy配列に変換
-        image_array = np.array(image)
+        image_array = np.array(img_data)
         
         # 正規化(0-255 -> 0-1)
         image_array = image_array.astype(np.float32) / 255.0
