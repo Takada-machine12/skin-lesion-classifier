@@ -66,10 +66,11 @@ class LesionClassifier:
         return model
     
     def train(self,
-              train_dataset: tf.data.Dataset,
-              validation_dataset: tf.data.Dataset,
-              epochs: int = 10,
-              callbacks: list = None) -> tf.keras.callbacks.History:
+              x_train, y_train,
+              validation_data=None,
+              batch_size=32,
+              epochs=10,
+              callbacks=None) -> tf.keras.callbacks.History:
         """
         モデルの学習を行う
         
@@ -80,8 +81,9 @@ class LesionClassifier:
             callbacks: コールバック関数のリスト
         """
         return self.model.fit(
-            train_dataset,
-            validation_data=validation_dataset,
+            x_train, y_train
+            validation_data=validation_data,
+            batch_size=batch_size,
             epochs=epochs,
             callbacks=callbacks
         )
