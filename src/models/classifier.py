@@ -27,22 +27,22 @@ class LesionClassifier:
         Returns:
             Model: コンパイル済みのKerasモデル
         """
-        model = tf.Keras.Sequential([
+        model = tf.keras.Sequential([
             # 入力層
             layers.Input(shape=self.input_shape),
             
             # 第１畳込みブロック
             layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
             layers.MaxPooling2D((2, 2)),
-            layers.batchNornalization(),
+            layers.BatchNormalization(),
             
             # 第2畳込みブロック
-            layers.Conv2D(64, (3, 3), activate='relu', padding='same'),
+            layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
             layers.MaxPooling2D((2, 2)),
             layers.BatchNormalization(),
             
             # 第3畳込みブロック
-            layers.Conv2D(128, (3, 3), activate='relu', padding='same'),
+            layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
             layers.MaxPooling2D((2, 2)),
             layers.BatchNormalization(),
             
