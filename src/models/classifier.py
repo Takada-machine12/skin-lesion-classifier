@@ -66,7 +66,8 @@ class LesionClassifier:
         return model
     
     def train(self,
-              X_train, y_train,
+              X_train, 
+              y_train,
               validation_data=None,
               batch_size=32,
               epochs=10,
@@ -75,13 +76,19 @@ class LesionClassifier:
         モデルの学習を行う
         
         Args:
-            train_dataset: 学習用データセット
-            validation_dataset: 検証用データセット
+            X_train: 訓練用データ
+            y_train: 検証用データ
+            validation_data: 検証データのタプル(X_val, y_val)
+            batch_size: バッチサイズ
             epochs: 学習エポック数
             callbacks: コールバック関数のリスト
+            
+        Returns:
+            History: 学習履歴
         """
         return self.model.fit(
-            X_train, y_train
+            X_train, 
+            y_train
             validation_data=validation_data,
             batch_size=batch_size,
             epochs=epochs,
