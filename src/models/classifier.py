@@ -66,7 +66,7 @@ class LesionClassifier:
         return model
     
     def train(self,
-              x_train, y_train,
+              X_train, y_train,
               validation_data=None,
               batch_size=32,
               epochs=10,
@@ -81,7 +81,7 @@ class LesionClassifier:
             callbacks: コールバック関数のリスト
         """
         return self.model.fit(
-            x_train, y_train
+            X_train, y_train
             validation_data=validation_data,
             batch_size=batch_size,
             epochs=epochs,
