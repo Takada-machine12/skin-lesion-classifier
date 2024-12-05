@@ -66,7 +66,7 @@ class LesionClassifier:
         return model
     
     def train(self,
-              X_train, 
+              x_train, 
               y_train,
               validation_data=None,
               batch_size=32,
@@ -87,7 +87,7 @@ class LesionClassifier:
             History: 学習履歴
         """
         return self.model.fit(
-            X_train, 
+            x_train, 
             y_train
             validation_data=validation_data,
             batch_size=batch_size,
