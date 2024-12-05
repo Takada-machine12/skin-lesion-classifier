@@ -88,7 +88,7 @@ class LesionClassifier:
         """
         return self.model.fit(
             x_train, 
-            y_train
+            y_train,
             validation_data=validation_data,
             batch_size=batch_size,
             epochs=epochs,
