@@ -18,7 +18,7 @@ class LesionClassifier:
         """
         self.input_shape = input_shape
         self.num_classes = num_classes
-        self.model = self._build_model()
+        self.model, self.reduce_lr = self._build_model()
         
     def _build_model(self) -> Model:
         """
@@ -56,6 +56,14 @@ class LesionClassifier:
             layers.Dense(self.num_classes, activation='softmax')
         ])
         
+        # 学習率スケジューリングを追加
+        reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
+            monitor='var_loss',
+            factor=0.5,    # 学習率を半分に
+            patience=3,    # ３エポック改善が見られなければ学習率を下げる
+            min_lr=0.00001 # 最小学習率
+        )
+        
         # オプティマイザーの学習率を調整
         optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001) # 0.001 → 0.0001
         
@@ -91,6 +99,13 @@ class LesionClassifier:
         Returns:
             History: 学習履歴
         """
+        
+        if callbacks is None:
+            callbacks = []
+            
+        # 学習率スケジューリングのコールバックを追加
+        callbacks.append(self.reduce_lr)    
+            
         return self.model.fit(
             x_train, 
             y_train,
