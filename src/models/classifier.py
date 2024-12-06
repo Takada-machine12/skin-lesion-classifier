@@ -35,26 +35,26 @@ class LesionClassifier:
             layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
             layers.MaxPooling2D((2, 2)),
             layers.BatchNormalization(),
-            layers.Dropout(0.2),
+            layers.Dropout(0.1),
             
             # 第2畳込みブロック
             layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
             layers.MaxPooling2D((2, 2)),
             layers.BatchNormalization(),
-            layers.Dropout(0.3),
+            layers.Dropout(0.2),
             
             # 第3畳込みブロック
             layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
             layers.MaxPooling2D((2, 2)),
             layers.BatchNormalization(),
-            layers.Dropout(0.4),
+            layers.Dropout(0.3),
             
             # 全結合層への変換
             layers.Flatten(),
-            layers.Dropout(0.6),
+            layers.Dropout(0.4),
             layers.Dense(128, activation='relu'),
             layers.BatchNormalization(),
-            layers.Dropout(0.3),
+            layers.Dropout(0.2),
             
             # 出力層
             layers.Dense(self.num_classes, activation='softmax')
