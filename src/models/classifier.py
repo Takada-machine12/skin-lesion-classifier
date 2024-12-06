@@ -71,7 +71,8 @@ class LesionClassifier:
               validation_data=None,
               batch_size=32,
               epochs=10,
-              callbacks=None) -> tf.keras.callbacks.History:
+              callbacks=None,
+              steps_per_epoch=None) -> tf.keras.callbacks.History:
         """
         モデルの学習を行う
         
@@ -82,6 +83,7 @@ class LesionClassifier:
             batch_size: バッチサイズ
             epochs: 学習エポック数
             callbacks: コールバック関数のリスト
+            steps_per_epoch: １エポックあたりのステップ数(データ拡張時に使用)
             
         Returns:
             History: 学習履歴
@@ -92,7 +94,8 @@ class LesionClassifier:
             validation_data=validation_data,
             batch_size=batch_size,
             epochs=epochs,
-            callbacks=callbacks
+            callbacks=callbacks,
+            steps_per_epoch=steps_per_epoch # fitメソッドにも追加
         )
         
     def predict(self, image: tf.Tensor) -> tf.Tensor:
