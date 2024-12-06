@@ -118,8 +118,10 @@ class LesionClassifier:
         モデルの重みを保存する
         
         Args:
-            filepath: 保存先のパス
+            filepath: 保存先のパス(.weights.h5で終わる必要がある)
         """
+        if not filepath.endswith('.weights.h5'):
+            filepath = filepath + '.weights.h5'
         self.model.save_weights(filepath)
         
     def load_weights(self, filepath: str):
