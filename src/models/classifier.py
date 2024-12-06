@@ -112,4 +112,22 @@ class LesionClassifier:
             予測結果
         """
         return self.model.predict(image)
+    
+    def save_weights(self, filepath: str):
+        """
+        モデルの重みを保存する
+        
+        Args:
+            filepath: 保存先のパス
+        """
+        self.model.save_weights(filepath)
+        
+    def load_weights(self, filepath: str):
+        """
+        モデルの重みを読み込む
+        
+        Args:
+            filepath: 読み込むファイルのパス
+        """
+        self.model.load_weights(filepath)
         
