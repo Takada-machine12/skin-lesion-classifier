@@ -56,9 +56,12 @@ class LesionClassifier:
             layers.Dense(self.num_classes, activation='softmax')
         ])
         
+        # オプティマイザーの学習率を調整
+        optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001) # 0.001 → 0.0001
+        
         # モデルのコンパイル
         model.compile(
-            optimizer='adam',
+            optimizer=optimizer,
             loss='categorical_crossentropy',
             metrics=['accuracy']
         )
