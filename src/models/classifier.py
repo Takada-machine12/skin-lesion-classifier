@@ -48,7 +48,7 @@ class LesionClassifier:
             
             # 全結合層への変換
             layers.Flatten(),
-            layers.Dropout(0.4),
+            layers.Dropout(0.5),
             layers.Dense(128, activation='relu'),
             layers.BatchNormalization(),
             
