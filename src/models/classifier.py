@@ -20,61 +20,86 @@ class LesionClassifier:
         self.num_classes = num_classes
         self.model, self.reduce_lr = self._build_model()
         
+    def _residual_block(self, x, filters, kernel_size=3):
+        """
+        残差ブロックの実装
+        
+        Args:
+            x: 入力テンソル
+            filters: フィルタ数
+            kernel_size: カーネルサイズ
+            
+        Returns:
+            残差接続を適用した出力テンソル
+        """
+        # メインパスでの特徴抽出
+        y = layers.Conv2D(filters, kernel_size, padding='same')(x)
+        y = layers.BatchNormalization()(y)
+        y = layers.ReLU()(y)
+        y = layers.Conv2D(filters, kernel_size, padding='same')(y)
+        y = layers.BatchNormalization()(y)
+        
+        # 入力と出力のチャネル数が異なる場合の調整
+        if x.shape[-1] != filters:
+            x = layers.Conv2D(filters, 1)(x)
+            
+        # 残差接続の適用
+        out = layers.Add()([x, y])
+        out = layers.ReLU()(out)
+        
+        return out
+        
     def _build_model(self) -> Model:
         """
-        CNNモデルの構築
+        残差ネットワークベースのCNNモデルの構築
+        
+        より深い特徴学習を可能にするため、残差ブロックを使用
+        勾配消失問題を緩和し、効果的な学習を実現
         
         Returns:
             Model: コンパイル済みのKerasモデル
         """
-        model = tf.keras.Sequential([
-            # 入力層
-            layers.Input(shape=self.input_shape),
-            
-            # 第１畳込みブロック
-            layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
-            layers.MaxPooling2D((2, 2)),
-            layers.BatchNormalization(),
-            
-            # 第2畳込みブロック
-            layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
-            layers.MaxPooling2D((2, 2)),
-            layers.BatchNormalization(),
-            
-            # 第3畳込みブロック
-            layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
-            layers.MaxPooling2D((2, 2)),
-            layers.BatchNormalization(),
-            
-            # 全結合層への変換
-            layers.Flatten(),
-            layers.Dropout(0.5),
-            layers.Dense(128, activation='relu'),
-            layers.BatchNormalization(),
-            
-            # 出力層
-            layers.Dense(self.num_classes, activation='softmax')
-        ])
+        # 入力層の定義
+        inputs = layers.Input(shape=self.input_shape)
         
-        # 学習率スケジューリングを追加
-        reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
-            monitor='var_loss',
-            factor=0.5,    # 学習率を半分に
-            patience=3,    # ３エポック改善が見られなければ学習率を下げる
-            min_lr=0.00001 # 最小学習率
-        )
+        # 初期の特徴抽出
+        x = layers.Conv2D(64, 3, padding='same')(inputs)
+        x = layers.BatchNormalization()(x)
+        x = layers.ReLU()(x)
         
-        # オプティマイザーの学習率を調整
-        optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001) # 0.001 → 0.0001
+        # 残差ブロックによる深い特徴学習
+        x = self._residual_block(x, filters=64)
+        x = layers.MaxPooling2D()(x)
         
-        # モデルのコンパイル
+        x = self._residual_block(x, filters=128)
+        x = layers.MaxPooling2D()(x)
+        
+        x = self._residual_block(x, filters=256)
+        x = layers.MaxPooling2D()(x)
+        
+        # グローバル特徴の抽出
+        x = layers.GlobalAveragePooling2D()(x)
+        
+        # 分類層
+        x = layers.Dense(512)(x)
+        x = layers.BatchNormalization()(x)
+        x = layers.ReLU()(x)
+        x = layers.Dropout(0.5)(x)
+        
+        outputs = layers.Dense(self.num_classes, activation='softmax')(x)
+        
+        # モデルの構築
+        model = Model(inputs, outputs)
+        
+        # オプティマイザと損失関数の設定
+        optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
         model.compile(
             optimizer=optimizer,
             loss='categorical_crossentropy',
             metrics=['accuracy']
         )
         
-        return model, reduce_lr
+        return model
     
     def train(self,
               x_train, 
