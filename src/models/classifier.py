@@ -74,7 +74,7 @@ class LesionClassifier:
             metrics=['accuracy']
         )
         
-        return model
+        return model, reduce_lr
     
     def train(self,
               x_train, 
