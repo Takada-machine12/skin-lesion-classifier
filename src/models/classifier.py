@@ -49,7 +49,7 @@ class LesionClassifier:
         
         return out
         
-    def _build_model(self) -> Model:
+    def _build_model(self) -> Tuple[Model, tf.keras.callbacks.ReduceLROnPlateau]:
         """
         残差ネットワークベースのCNNモデルの構築
         
@@ -57,7 +57,7 @@ class LesionClassifier:
         勾配消失問題を緩和し、効果的な学習を実現
         
         Returns:
-            Model: コンパイル済みのKerasモデル
+            Tuple[Model, ReduceLROnPlateau]: コンパイル済みのKerasモデルと学習率スケジューラー
         """
         # 入力層の定義
         inputs = layers.Input(shape=self.input_shape)
@@ -91,6 +91,14 @@ class LesionClassifier:
         # モデルの構築
         model = Model(inputs, outputs)
         
+        # 学習率スケジューラーの設定
+        reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
+            monitor='val_loss',
+            factor=0.5,
+            patience=3,
+            min_lr=0.00001
+        )
+        
         # オプティマイザと損失関数の設定
         optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
         model.compile(
@@ -99,7 +107,7 @@ class LesionClassifier:
             metrics=['accuracy']
         )
         
-        return model
+        return model, reduce_lr
     
     def train(self,
               x_train, 
