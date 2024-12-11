@@ -20,7 +20,7 @@ class LesionClassifier:
         self.num_classes = num_classes
         self.model, self.reduce_lr = self._build_model()
         
-    def _residual_block(self, x, filters, kernel_size=3):
+    def _residual_block(self, X, filters, kernel_size=3):
         """
         残差ブロックの実装
         
@@ -33,18 +33,18 @@ class LesionClassifier:
             残差接続を適用した出力テンソル
         """
         # メインパスでの特徴抽出
-        y = layers.Conv2D(filters, kernel_size, padding='same')(x)
+        y = layers.Conv2D(filters, kernel_size, padding='same')(X)
         y = layers.BatchNormalization()(y)
         y = layers.ReLU()(y)
         y = layers.Conv2D(filters, kernel_size, padding='same')(y)
         y = layers.BatchNormalization()(y)
         
         # 入力と出力のチャネル数が異なる場合の調整
-        if x.shape[-1] != filters:
-            x = layers.Conv2D(filters, 1)(x)
+        if X.shape[-1] != filters:
+            X = layers.Conv2D(filters, 1)(X)
             
         # 残差接続の適用
-        out = layers.Add()([x, y])
+        out = layers.Add()([X, y])
         out = layers.ReLU()(out)
         
         return out
@@ -63,28 +63,28 @@ class LesionClassifier:
         inputs = layers.Input(shape=self.input_shape)
         
         # 初期の特徴抽出
-        x = layers.Conv2D(64, 3, padding='same')(inputs)
-        x = layers.BatchNormalization()(x)
-        x = layers.ReLU()(x)
+        X = layers.Conv2D(64, 3, padding='same')(inputs)
+        X = layers.BatchNormalization()(X)
+        X = layers.ReLU()(X)
         
         # 残差ブロックによる深い特徴学習
-        x = self._residual_block(x, filters=64)
-        x = layers.MaxPooling2D()(x)
+        X = self._residual_block(X, filters=64)
+        X = layers.MaxPooling2D()(X)
         
-        x = self._residual_block(x, filters=128)
-        x = layers.MaxPooling2D()(x)
+        X = self._residual_block(X, filters=128)
+        X = layers.MaxPooling2D()(X)
         
-        x = self._residual_block(x, filters=256)
-        x = layers.MaxPooling2D()(x)
+        X = self._residual_block(X, filters=256)
+        X = layers.MaxPooling2D()(X)
         
         # グローバル特徴の抽出
-        x = layers.GlobalAveragePooling2D()(x)
+        X = layers.GlobalAveragePooling2D()(X)
         
         # 分類層
-        x = layers.Dense(512)(x)
-        x = layers.BatchNormalization()(x)
-        x = layers.ReLU()(x)
-        x = layers.Dropout(0.5)(x)
+        X = layers.Dense(512)(X)
+        X = layers.BatchNormalization()(X)
+        X = layers.ReLU()(X)
+        X = layers.Dropout(0.5)(X)
         
         outputs = layers.Dense(self.num_classes, activation='softmax')(x)
         
@@ -110,7 +110,7 @@ class LesionClassifier:
         return model, reduce_lr
     
     def train(self,
-              x_train, 
+              X_train, 
               y_train,
               validation_data=None,
               batch_size=32,
@@ -140,7 +140,7 @@ class LesionClassifier:
         callbacks.append(self.reduce_lr)    
             
         return self.model.fit(
-            x_train, 
+            X_train, 
             y_train,
             validation_data=validation_data,
             batch_size=batch_size,
