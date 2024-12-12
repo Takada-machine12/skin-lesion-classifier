@@ -144,8 +144,7 @@ class LesionClassifier:
         # x_trainがImageDataGeneratorのflowオブジェクトかどうかを確認
         if hasattr(x_train, 'flow'):
             return self.model.fit(
-                x_train, 
-                y_train,
+                x_train,
                 validation_data=validation_data,
                 epochs=epochs,
                 callbacks=callbacks,
