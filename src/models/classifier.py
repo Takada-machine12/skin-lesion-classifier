@@ -115,7 +115,6 @@ class LesionClassifier:
               x_train, 
               y_train,
               validation_data=None,
-              batch_size=32,
               epochs=10,
               callbacks=None,
               steps_per_epoch=None) -> tf.keras.callbacks.History:
@@ -123,7 +122,7 @@ class LesionClassifier:
         モデルの学習を行う
         
         Args:
-            X_train: 訓練用データ (ImageDataGeneratorのflowオブジェクトも受け付ける)
+            X_train: 訓練用データ 
             y_train: 検証用データ
             validation_data: 検証データのタプル(X_val, y_val)
             batch_size: バッチサイズ
@@ -140,27 +139,16 @@ class LesionClassifier:
             
         # 学習率スケジューリングのコールバックを追加
         callbacks.append(self.reduce_lr)   
-         
-        # x_trainがImageDataGeneratorのflowオブジェクトかどうかを確認
-        if hasattr(x_train, 'flow'):
-            return self.model.fit(
-                x_train,
-                validation_data=validation_data,
-                epochs=epochs,
-                callbacks=callbacks,
-                steps_per_epoch=steps_per_epoch # fitメソッドにも追加
-            )
-        else:
-            # 通常のNumPy配列の場合
-            return self.model.fit(
+        
+        return self.model.fit(
                 x_train,
                 y_train,
                 validation_data=validation_data,
-                batch_size=batch_size,
                 epochs=epochs,
                 callbacks=callbacks,
                 steps_per_epoch=steps_per_epoch # fitメソッドにも追加
             )
+
         
     def predict(self, image: tf.Tensor) -> tf.Tensor:
         """
