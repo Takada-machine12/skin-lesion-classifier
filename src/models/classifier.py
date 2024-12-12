@@ -8,16 +8,18 @@ from typing import Tuple
 class LesionClassifier:
     """皮膚病変の分類を行うモデルクラス"""
     
-    def __init__(self, input_shape: Tuple[int, int, int] = [224, 224, 3], num_classes: int = 2):
+    def __init__(self, input_shape: Tuple[int, int, int] = [224, 224, 3], num_classes: int = 2, learning_rate: float = 0.001):
         """
         初期化メソッド
         
         Args:
             input_shape (Tuple[int, int, int]): 入力画像のシェイプ(height, width, channels)
             num_classes(int): 分類するクラス数
+            learning_rate: 学習率。デフォルトは0.001
         """
         self.input_shape = input_shape
         self.num_classes = num_classes
+        self.learning_rate = learning_rate
         self.model, self.reduce_lr = self._build_model()
         
     def _residual_block(self, x, filters, kernel_size=3):
@@ -100,7 +102,7 @@ class LesionClassifier:
         )
         
         # オプティマイザと損失関数の設定
-        optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+        optimizer = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=optimizer,
             loss='categorical_crossentropy',
