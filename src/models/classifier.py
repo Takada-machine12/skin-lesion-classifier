@@ -115,6 +115,7 @@ class LesionClassifier:
               x_train, 
               y_train,
               validation_data=None,
+              batch_size=32,
               epochs=10,
               callbacks=None,
               steps_per_epoch=None) -> tf.keras.callbacks.History:
@@ -144,6 +145,7 @@ class LesionClassifier:
                 x_train,
                 y_train,
                 validation_data=validation_data,
+                batch_size=batch_size,
                 epochs=epochs,
                 callbacks=callbacks,
                 steps_per_epoch=steps_per_epoch # fitメソッドにも追加
