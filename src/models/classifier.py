@@ -70,14 +70,14 @@ class LesionClassifier:
         x = layers.ReLU()(x)
         
         # 残差ブロックによる深い特徴学習
-        x = self._residual_block(x, filters=32)
-        x = layers.MaxPooling2D()(x)
-        
         x = self._residual_block(x, filters=64)
         x = layers.MaxPooling2D()(x)
         
-        #x = self._residual_block(x, filters=256)
-        #x = layers.MaxPooling2D()(x)
+        x = self._residual_block(x, filters=128)
+        x = layers.MaxPooling2D()(x)
+        
+        x = self._residual_block(x, filters=256)
+        x = layers.MaxPooling2D()(x)
         
         # グローバル特徴の抽出
         x = layers.GlobalAveragePooling2D()(x)
