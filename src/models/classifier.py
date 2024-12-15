@@ -192,6 +192,6 @@ class LesionClassifier:
         """
         return self.model.load_weights(
             filepath,
-            by_name=by_name,
-            skip_mismatch=skip_mismatch
+            by_name,
+            skip_mismatch
         )
