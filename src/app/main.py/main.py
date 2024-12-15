@@ -13,7 +13,7 @@ from models.classifier import LesionClassifier
 
 def load_model():
     """モデルのロードと初期化"""
-    model = LesionClassifier(input_shape=(224, 224, 3), num_classes=2, filters=[64, 128, 256])
+    model = LesionClassifier(input_shape=(224, 224, 3), num_classes=2)
     print("Model summary:")
     model.model.summary()
     
@@ -25,7 +25,7 @@ def load_model():
     # デバッグ用にパスを表示
     print(f"Looking for model at: {model_path}")
     
-    model.load_weights(model_path, skip_mismatch=True, by_name=True)
+    model.load_weights(model_path)
     return model
 
 def preprocess_image(image):
