@@ -8,7 +8,12 @@ from typing import Tuple
 class LesionClassifier:
     """皮膚病変の分類を行うモデルクラス"""
     
-    def __init__(self, input_shape: Tuple[int, int, int] = [224, 224, 3], num_classes: int = 2, learning_rate: float = 0.001):
+    def __init__(self, 
+                 input_shape: Tuple[int, int, int] = [224, 224, 3], 
+                 num_classes: int = 2, 
+                 learning_rate: float = 0.001,
+                 inital_filters: int = 32
+                 ):
         """
         初期化メソッド
         
@@ -20,6 +25,7 @@ class LesionClassifier:
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.learning_rate = learning_rate
+        self.initial_filters = inital_filters
         self.model, self.reduce_lr = self._build_model()
         
     def _residual_block(self, x, filters, kernel_size=3):
