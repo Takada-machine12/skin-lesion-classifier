@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 #from src.models.classifier import LesionClassifier
 from models.classifier import LesionClassifier
 
-def load_model(self, filepath, skip_mismatch=False, by_name=False):
+def load_model():
     """モデルのロードと初期化"""
     model = LesionClassifier(input_shape=(224, 224, 3), num_classes=2, filters=[64, 128, 256])
     print("Model summary:")
@@ -26,19 +26,7 @@ def load_model(self, filepath, skip_mismatch=False, by_name=False):
     print(f"Looking for model at: {model_path}")
     
     model.load_weights(model_path, skip_mismatch=True, by_name=True)
-    """
-    重みの読み込みをカスタマイズ
-    
-    Args:
-        filepath: 重みファイルのパス
-        skip_mismatch: 不一致の重みをスキップするかどうか
-        by_name: 名前で重みを読み込むかどか
-    """
-    return self.model.load_weights(
-        filepath,
-        skip_mismatch=skip_mismatch,
-        by_name=by_name
-    ) 
+    return model
 
 def preprocess_image(image):
     """画像の前処理"""
