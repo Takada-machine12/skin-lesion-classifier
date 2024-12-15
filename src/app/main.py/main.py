@@ -25,7 +25,7 @@ def load_model():
     # デバッグ用にパスを表示
     print(f"Looking for model at: {model_path}")
     
-    model.load_weights(model_path, skip_mismatch=False, by_name=False)
+    model.load_weights(model_path, skip_mismatch=True, by_name=True)
     return model
 
 def preprocess_image(image):
