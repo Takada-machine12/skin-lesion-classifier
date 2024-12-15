@@ -190,8 +190,4 @@ class LesionClassifier:
             skip_mismatch: 不一致の重みをスキップするかどうか
             by_name: 名前で重みを読み込むかどうか
         """
-        return self.model.load_weights(
-            filepath,
-            by_name,
-            skip_mismatch
-        )
+        return self.model.load_weights(filepath)
