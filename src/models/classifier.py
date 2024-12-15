@@ -3,7 +3,7 @@
 """
 import tensorflow as tf
 from keras import layers, Model
-from typing import Tuple
+from typing import Tuple, List
 
 class LesionClassifier:
     """皮膚病変の分類を行うモデルクラス"""
@@ -12,7 +12,7 @@ class LesionClassifier:
                  input_shape: Tuple[int, int, int] = [224, 224, 3], 
                  num_classes: int = 2, 
                  learning_rate: float = 0.001,
-                 initial_filters: int = 32
+                 filters: List[int] = [64, 128, 256]
                  ):
         """
         初期化メソッド
@@ -25,7 +25,7 @@ class LesionClassifier:
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.learning_rate = learning_rate
-        self.initial_filters = initial_filters
+        self.filters = filters if not None else [64, 128, 256]
         self.model, self.reduce_lr = self._build_model()
         
     def _residual_block(self, x, filters, kernel_size=3):
@@ -76,13 +76,13 @@ class LesionClassifier:
         x = layers.ReLU()(x)
         
         # 残差ブロックによる深い特徴学習
-        x = self._residual_block(x, filters=64)
+        x = self._residual_block(x, filters=self.filters[0])
         x = layers.MaxPooling2D()(x)
         
-        x = self._residual_block(x, filters=128)
+        x = self._residual_block(x, filters=self.filters[1])
         x = layers.MaxPooling2D()(x)
         
-        x = self._residual_block(x, filters=256)
+        x = self._residual_block(x, filters=self.filters[2])
         x = layers.MaxPooling2D()(x)
         
         # グローバル特徴の抽出
