@@ -11,8 +11,7 @@ class LesionClassifier:
     def __init__(self, 
                  input_shape: Tuple[int, int, int] = [224, 224, 3], 
                  num_classes: int = 2, 
-                 learning_rate: float = 0.001,
-                 filters: List[int] = [64, 128, 256]
+                 learning_rate: float = 0.001
                  ):
         """
         初期化メソッド
@@ -25,7 +24,6 @@ class LesionClassifier:
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.learning_rate = learning_rate
-        self.filters = filters if not None else [64, 128, 256]
         self.model, self.reduce_lr = self._build_model()
         
     def _residual_block(self, x, filters, kernel_size=3):
@@ -76,13 +74,13 @@ class LesionClassifier:
         x = layers.ReLU()(x)
         
         # 残差ブロックによる深い特徴学習
-        x = self._residual_block(x, filters=self.filters[0])
+        x = self._residual_block(x, filters=64)
         x = layers.MaxPooling2D()(x)
         
-        x = self._residual_block(x, filters=self.filters[1])
+        x = self._residual_block(x, filters=128)
         x = layers.MaxPooling2D()(x)
         
-        x = self._residual_block(x, filters=self.filters[2])
+        x = self._residual_block(x, filters=256)
         x = layers.MaxPooling2D()(x)
         
         # グローバル特徴の抽出
@@ -181,13 +179,11 @@ class LesionClassifier:
             filepath = filepath + '.weights.h5'
         self.model.save_weights(filepath)
         
-    def load_weights(self, filepath: str, skip_mismatch=False, by_name=False):
+    def load_weights(self, filepath: str):
         """
         モデルの重みを読み込む
         
         Args:
             filepath: 読み込むファイルのパス
-            skip_mismatch: 不一致の重みをスキップするかどうか
-            by_name: 名前で重みを読み込むかどうか
         """
         return self.model.load_weights(filepath)
