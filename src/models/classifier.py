@@ -181,12 +181,17 @@ class LesionClassifier:
             filepath = filepath + '.weights.h5'
         self.model.save_weights(filepath)
         
-    def load_weights(self, filepath: str):
+    def load_weights(self, filepath: str, skip_mismatch=False, by_name=False):
         """
         モデルの重みを読み込む
         
         Args:
             filepath: 読み込むファイルのパス
+            skip_mismatch: 不一致の重みをスキップするかどうか
+            by_name: 名前で重みを読み込むかどうか
         """
-        self.model.load_weights(filepath)
-        
+        return self.model.load_weights(
+            filepath,
+            skip_mismatch=skip_mismatch,
+            by_name=by_name
+        )
