@@ -13,7 +13,7 @@ from models.classifier import LesionClassifier
 
 def load_model():
     """モデルのロードと初期化"""
-    model = LesionClassifier(input_shape=(224, 224, 3), num_classes=2, initial_filters=32)
+    model = LesionClassifier(input_shape=(224, 224, 3), num_classes=2, filters=[64, 128, 256])
     print("Model summary:")
     model.model.summary()
     
