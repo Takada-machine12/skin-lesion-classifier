@@ -20,7 +20,7 @@ def load_model():
     # ルートディレクトリのmodelsフォルダを指すように修正
     current_dir = os.path.dirname(__file__)
     root_dir = os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
-    model_path = os.path.join(root_dir, 'models', 'model_with_lr_scheduling_v1.weights.h5')
+    model_path = os.path.join(root_dir, 'models', 'model_with_residual_network_v1.weights.h5')
     
     # デバッグ用にパスを表示
     print(f"Looking for model at: {model_path}")
