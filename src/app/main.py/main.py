@@ -40,7 +40,7 @@ def preprocess_image(image):
     img = img / 225.0
     
     # バッチ次元の追加
-    img = np.expand_dims(img, axist=0)
+    img = np.expand_dims(img, axis=0)
     
     return img
 
