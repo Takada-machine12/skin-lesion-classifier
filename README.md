@@ -41,3 +41,38 @@ pip install -r requirements.txt
    jupyter notebook
 
    # notebooks/01_data_analysis.ipynb を実行
+
+## アプリケーションの使用方法
+``bash
+# アプリケーションの起動
+steamlit run src/app/main.py
+
+## プロジェクト構造
+skin-lesion-classifier/
+├── data/          # データ関連ファイル
+│   ├── raw/      # 元データ
+│   ├── processed/ # 処理済みデータ
+│   └── test/     # テスト用データ
+├── models/        # 学習済みモデル
+├── notebooks/     # 分析・学習用ノートブック
+├── src/          # ソースコード
+└── tests/        # テストコード
+
+## テストの実行方法
+# 全てのテストを実行
+python -m unittest discover tests
+
+# 個別のテストを実行
+python -m unittest tests/test_preprocessing.py
+python -m unittest tests/test_model.py
+python -m unittest tests/test_app.py
+
+## モデルの性能
+現在のモデルは以下の性能を達成しています。
+・訓練データでの精度：約80%
+・検証データでの精度：約70%
+・テストデータでの性能
+   ・良性症例の判定精度：75%以上
+   ・悪性症例の判定精度：53%以上
+
+※注意：このモデルは研究・開発目的で作成されており、実際の医療診断には使用できません。
